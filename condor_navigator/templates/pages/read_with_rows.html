@@ -1,0 +1,66 @@
+{% load widget_tweaks %}
+{% load i18n %}
+{% load condor_tags %}
+
+{% trans "Close" as str_close %}
+{% trans "Filter" as str_filter %}
+
+
+<div class="modal-header mb-3">
+    <div class="container p-0 m-0">
+        <div class="row no-gutters">
+            <div class="col">
+                <h5 class="modal-title">
+                    {{ pages.model_verbose_name }}
+                </h5>
+            </div>
+
+            <div class="col">
+                <button type="button" class="close pb-1" data-dismiss="modal" aria-label="{{ str_close }}">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+
+        </div>
+
+
+        <div class="row no-gutters">
+            <div class="col justify-content-center align-self-center">
+                {{ object }}
+            </div>
+{#            <div >#}
+{#                <a class="btn btn-light float-right" href="{% url object|list_route pk=object.pk%}">{{ str_filter }}</a>#}
+{#            </div>#}
+        </div>
+    </div>
+{#    <button type="button" class="close" data-dismiss="modal" aria-label="{{ str_close }}">#}
+{#        <span aria-hidden="true">&times;</span>#}
+{#    </button>#}
+</div>
+
+
+
+<div class="modal-body">
+    <div class="container p-0 m-0">
+    {% for field_name, field_vname_value in fields.items %}
+        <div class="row">
+            <div class="text-right col-sm-3">
+                <div class="classWithPad">
+                    <b><label for="{{ field_name }}">{{ field_vname_value.0 }}</label></b>
+                </div>
+            </div>
+            <div class="text-left col-sm-9">
+                <div class="classWithPad">{{ field_vname_value.1 }}</div>
+            </div>
+        </div>
+    {% endfor %}
+    </div>
+    {{ form.media }}
+
+</div>
+
+<div class="modal-footer">
+    <a class="btn btn-outline-secondary" href="{% url object|list_route pk=object.pk%}">{{ str_filter }}</a>
+{#    <button type="button" class="btn btn-default" data-dismiss="modal">{{ str_close }}</button>#}
+</div>

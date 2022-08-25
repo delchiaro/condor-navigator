@@ -1,0 +1,126 @@
+{% load widget_tweaks %}
+{% load static %}
+{% load condor_tags %}
+{% load i18n %}
+{% trans "Close" as str_close %}
+{% trans "Update" as str_update %}
+
+<!doctype html>
+<html lang="en">
+{#<head>#}
+{#    {% include "head.html" %}#}
+{#</head>#}
+
+<body>
+
+{# Django-recurrence fix "pgettext is not defined" javascript error #}
+<script src="{% url 'jsi18n' %}"></script>
+
+
+<form method="POST" class="post-form">
+    {% csrf_token %}
+
+
+<div class="modal-header mb-3">
+    <div class="container p-0 m-0">
+        <div class="row no-gutters">
+            <div class="col">
+                <h5 class="modal-title">
+                    {{ pages.model_verbose_name }}
+                </h5>
+            </div>
+
+            <div class="col">
+                <button type="button" class="close pb-1" data-dismiss="modal" aria-label="{{ str_close }}">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+
+        </div>
+
+
+        <div class="row no-gutters">
+            <div class="col justify-content-center align-self-center">
+                {{ object }}
+            </div>
+            {#            <div >#}
+            {#                <a class="btn btn-light float-right" href="{% url object|list_route pk=object.pk%}">{{ str_filter }}</a>#}
+            {#            </div>#}
+        </div>
+    </div>
+    {#    <button type="button" class="close" data-dismiss="modal" aria-label="{{ str_close }}">#}
+    {#        <span aria-hidden="true">&times;</span>#}
+    {#    </button>#}
+</div>
+
+
+
+    <div class="modal-body">
+        <div class="{% if form.non_field_errors %}invalid{% endif %} mb-2">
+            {% for error in form.non_field_errors %}
+                <p style="color:#FF0000";>{{ error }}</p>
+            {% endfor %}
+        </div>
+
+
+        {% for field in form %}
+            <div class="form-group{% if field.errors %} has-danger{% endif %}">
+
+                <label class="form-control-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                <br>
+
+                {% if field|is_recurrence_field %}
+{#                    {% render_field field placeholder=field.label %}#}
+                    <div>
+                    {{ field }}
+                    </div>
+                {% else %}
+                    {% render_field field class="form-control" placeholder=field.label %}
+                {% endif %}
+
+
+                {% for error in field.errors %}
+                    <div class="form-control-feedback" style="color:#ff0000" ;>{{ error }}</div>
+                {% endfor %}
+            </div>
+        {% endfor %}
+
+        {{ form.media }}
+    </div>
+
+
+    <div class="modal-footer">
+
+        {% if view.is_popup %}
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ str_close }}</button>
+            <input type="submit" class="submit-btn btn btn-primary" value="{{ str_update }}">
+            {#        <button type="submit" class="btn btn-primary">Create</button>#}
+
+        {% endif %}
+
+        {% if not view.is_popup %}
+            <input type="submit" class="submit-btn btn btn-primary" value="{{ str_update }}">
+        {% endif %}
+    </div>
+
+
+</form>
+
+
+    <style> {# fix django-recurrence style for modal forms #}
+        table.recurrence-calendar {
+            z-index: 9999 !important;
+        }
+        div.recurrence-widget {
+            float: none !important;
+        }
+        ul.until-count li {
+            display: inline-block !important;
+            padding-left: 0px !important;
+            padding-right: 16px !important;
+            padding-bottom: 8px !important;
+        }
+    </style>
+
+</body>

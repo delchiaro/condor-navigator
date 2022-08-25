@@ -1,0 +1,61 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2020-09-17 02:07+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: templates/pages/create.html:10 templates/pages/delete.html:3
+#: templates/pages/list.html:10 templates/pages/read.html:5
+#: templates/pages/read_with_rows.html:5 templates/pages/update.html:5
+msgid "Close"
+msgstr "Chiudi"
+
+#: templates/pages/create.html:11 templates/pages/list.html:11
+msgid "Create"
+msgstr "Crea"
+
+#: templates/pages/create.html:12 templates/pages/list.html:12
+msgid "New"
+msgstr "Nuovo"
+
+#: templates/pages/delete.html:4
+msgid "Delete"
+msgstr "Elimina"
+
+#: templates/pages/delete.html:5
+msgid "Are you sure you want to delete object "
+msgstr "Sei sicuro di voler eliminare l'oggetto"
+
+#: templates/pages/list.html:13
+msgid "previous"
+msgstr "precedente"
+
+#: templates/pages/list.html:14
+msgid "next"
+msgstr "successivo"
+
+#: templates/pages/list.html:15
+msgid "last"
+msgstr "ultimo"
+
+#: templates/pages/read.html:6 templates/pages/read_with_rows.html:6
+msgid "Filter"
+msgstr "Filtra"
+
+#: templates/pages/update.html:6
+msgid "Update"
+msgstr "Aggiorna"

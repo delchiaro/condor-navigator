@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% load condor_tags %}
+
+
+{% block content %}
+    <h2>{% block title %} {% endblock %}</h2>
+    {% if user.is_authenticated %}
+        <p>Hello {{ user.username }}.</p>
+        <p>Use the left menu to navigate through the control panel.</p>
+    {% else %}
+        <p>Please log in to use Condor Navigator.</p>
+    {% endif %}
+{% endblock %}
+

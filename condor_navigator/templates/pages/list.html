@@ -1,0 +1,171 @@
+{% extends 'base.html' %}
+
+{% load i18n %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% load condor_tags %}
+
+
+{% block content %}
+    {% trans "Close" as str_close %}
+    {% trans "Create" as str_create %}
+    {% trans "New" as str_new %}
+    {% trans "previous" as str_previous %}
+    {% trans "next" as str_next %}
+    {% trans "last" as str_last %}
+    <h2>
+        {% block title %} {{ page.title }}  {% endblock %}
+        {% if query %}
+            <a class="ml-2 btn btn-outline-secondary" aria-label="Close" href="{% url page.route_name %}" role="button">
+                Filter: {{ query }}
+                <button type="button" class="close ml-2" aria-label="{{ str_close }}">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+
+            </a>
+            <br>
+        {% endif %}
+
+    </h2>
+
+    <!-- Modal 1 with id="create-modal"-->
+    <div class="modal fade" id="create-modal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 2 with id="modal" -->
+    <div class="modal fade" tabindex="-1" role="dialog" id="modal">
+        <div class="modal-dialog" role="document"
+             style="width: auto;max-width: 960px; min-width: 300px; display: table; overflow: auto">
+            <div class="modal-content"></div>
+        </div>
+    </div>
+
+    <button id="create" class="btn btn-primary mt-2 mb-2 ml-1" type="button" name="button">{{ str_create }}</button>
+
+    <div class="table-responsive " >
+        <table class="table table-hover table-sm ">
+            <thead class="thead-dark">
+            <tr>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                {% block tableheader %}
+                    {{ page|table_header }}
+                {% endblock %}
+                {% for m in related_fk_models.values %}
+                    <th><a href="{{ m | default_url }}"><u>{{ m | model_name }}s</u></a></th>
+                {% endfor %}
+            </tr>
+            </thead>
+            {% for object in object_list %}
+                <tr>
+                    <td class="fit">
+                        <button type="button" id="read" class="bs-modal btn btn-sm btn-primary"
+                                data-form-url="{{ object|read_url }}">
+                            <span class="fa fa-eye"></span>
+                        </button>
+                    </td>
+                    <td class="fit">
+                        <button type="button" id="update" class="bs-modal btn btn-sm btn-primary"
+                                data-form-url="{{ object|update_url }}">
+                            <svg width="1em" height="1em" viewBox="0 0 16 16"
+                                 class="bi bi-pencil svg-inline--fa fa-eye fa-w-18" fill="currentColor"
+                                 xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd"
+                                      d="M11.293 1.293a1 1 0 0 1 1.414 0l2 2a1 1 0 0 1 0 1.414l-9 9a1 1 0 0 1-.39.242l-3 1a1 1 0 0 1-1.266-1.265l1-3a1 1 0 0 1 .242-.391l9-9zM12 2l2 2-9 9-3 1 1-3 9-9z"/>
+                                <path fill-rule="evenodd"
+                                      d="M12.146 6.354l-2.5-2.5.708-.708 2.5 2.5-.707.708zM3 10v.5a.5.5 0 0 0 .5.5H4v.5a.5.5 0 0 0 .5.5H5v.5a.5.5 0 0 0 .5.5H6v-1.5a.5.5 0 0 0-.5-.5H5v-.5a.5.5 0 0 0-.5-.5H3z"/>
+                            </svg>
+                        </button>
+                    </td>
+                    <td class="fit">
+                        <button type="button" id="delete" class="bs-modal btn btn-sm btn-danger mx-auto"
+                                data-form-url="{{ object|delete_url }}">
+                            <span class="fa fa-trash"></span>
+                        </button>
+                    </td>
+                    <td></td>
+                    {% block tabledata %}
+                        {{ object|table_row:page }}
+                    {% endblock %}
+
+                    {% for fk, model in related_fk_models.items %}
+                        <td class="fit">
+                            <div class="text-center">
+                                <a class="btn btn-sm btn-primary"
+                                   href="{% url model|default_route %}/{{ fk }}-{{ object.pk }}">
+                                    {#                                    <span class="fa fa-eye"></span>#}
+                                    <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-search"
+                                         fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                        <path fill-rule="evenodd" d="M10.442 10.442a1 1 0 0 1 1.415 0l3.85 3.85a1 1 0 0 1-1.414 1.415l-3.85-3.85a1 1 0 0 1 0-1.415z"/>
+                                        <path fill-rule="evenodd" d="M6.5 12a5.5 5.5 0 1 0 0-11 5.5 5.5 0 0 0 0 11zM13 6.5a6.5 6.5 0 1 1-13 0 6.5 6.5 0 0 1 13 0z"/>
+                                    </svg>
+                                </a>
+                            </div>
+                        </td>
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+
+    {#    <button id="create2" class="btn btn-primary mb-4 ml-1" type="button" name="button">Create new</button>#}
+
+
+    <div class="pagination">
+        <span class="step-links">
+            {% if page_obj.has_previous %}
+                <a href="?page=1">&laquo; first</a>
+                <a href="?page={{ page_obj.previous_page_number }}">{{ str_previous }}</a>
+            {% endif %}
+
+            <span class="current">
+                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+            </span>
+
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}">{{ str_next }}</a>
+                <a href="?page={{ page_obj.paginator.num_pages }}">{{ str_last }} &raquo;</a>
+            {% endif %}
+        </span>
+    </div>
+
+
+
+    {{ form }}
+    {{ form.media }}
+{% endblock %}
+
+
+
+{% block extrascripts %}
+    <script type="text/javascript">
+        $(function () {
+
+            // Update, Read and Delete buttons open modal with id="modal" (default)
+            // The formURL is retrieved from the data of the element
+            $(".bs-modal").each(function () {
+                $(this).modalForm({
+                    formURL: $(this).data('form-url')
+                });
+            });
+
+            $("#create").modalForm({
+                formURL: "{% url page|create_route  %}",
+                modalID: "#create-modal"
+            });
+
+            $("#create2").modalForm({
+                formURL: "{% url page|create_route  %}",
+                modalID: "#create-modal"
+            });
+        });
+    </script>
+{% endblock %}
+
+

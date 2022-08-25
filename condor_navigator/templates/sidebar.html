@@ -1,0 +1,27 @@
+<!-- Sidebar  -->
+<nav id="sidebar">
+    <div class="sidebar-header">
+        <h3>{{ navigator.menu_title }}</h3>
+    </div>
+
+    <ul class="list-unstyled components pt-0">
+{#        <p>List of Views</p>#}
+        {% if user.is_authenticated %}
+            {% for menu_name, menu in navigator.menus.items %}
+                <li class="active">
+                    <a href="#submenu{{ forloop.counter0 }}" data-toggle="collapse" aria-expanded="False"
+                       class="dropdown-toggle">
+                        {{ menu_name }}
+                    </a>
+                    <ul class="collapse list-unstyled" id="submenu{{ forloop.counter0 }}">
+                        {% for page in menu.pages %}
+                            <li><a href="{% url page.route_name %}">{{ page.title|default_if_none:"NONE" }}</a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </li>
+            {% endfor %}
+        {% endif %}
+    </ul>
+
+</nav>
